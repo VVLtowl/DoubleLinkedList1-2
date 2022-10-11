@@ -1,7 +1,7 @@
-/**
+/*********************************************************
 * @brief		イテレータ単体テストのテスト 
 * @date			2022/10/06
-*/
+********************************************************/
 #include "gtest/gtest.h"
 #include "../DoubleLinkedList1-2/DoubleLinkedList/DoubleLinkedList.h"
 
@@ -14,30 +14,30 @@ namespace iterator_auto_test
 	//========== イテレータの指す要素を取得するテスト ==========
 	namespace iterator_getNode_test
 	{
-		/**
+		/*********************************************************
 		* @brief		リストの参照がない状態で呼び出した際の挙動
 		* @detail		ID:1-0
 		* 				リストの参照がない状態で呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorGetNodeTest, WhenNoReference)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList::Node node;
 			DoubleLinkedList::Iterator iter(&node, nullptr);//リストの参照がないイテレータを作成
-			
-#ifdef _DEBUG
+
 			EXPECT_DEATH((*iter), "iterator: no reference");
 #else
 			SUCCEED();
 #endif
 		}
 
-		/**
+		/*********************************************************
 		* @brief		Iteratorから取得した要素に対して、値の代入が行えるかをチェック
 		* @detail		ID:1-1
 		*				Iteratorから取得した要素に対して、
 		*				値の代入が行えるかをチェックします。
-		*/
+		********************************************************/
 		TEST(IteratorGetNodeTest, AfterAssignNodeData)
 		{
 			DoubleLinkedList list;
@@ -63,13 +63,13 @@ namespace iterator_auto_test
 			EXPECT_NE(0, strcmp(initName, node.scoreData.name));
 		}
 
-		/**
+		/*********************************************************
 		* @brief		ConstIteratorから取得した要素に対して、値の代入が行えないかをチェック
 		* @detail		ID:1-2
 		*				ConstIteratorから取得した要素に対して、
 		*				値の代入が行えないかをチェックします。
 		*				コンパイルエラーになることをチェックします。(手動テスト)
-		*/
+		********************************************************/
 		//TEST(IteratorGetNodeTest, WhenEmptyList_GetFromBegin)
 		//{
 		//	DoubleLinkedList list;
@@ -85,18 +85,18 @@ namespace iterator_auto_test
 		//	(*constIter).scoreData.score = 10;
 		//}
 
-		/**
+		/*********************************************************
 		* @brief		リストが空の際の、先頭イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-3
 		*				リストが空の際の、先頭イテレータに対して呼び出した際に、
 		* 				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorGetNodeTest, WhenEmptyList_GetFromBegin)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList list;
 			EXPECT_EQ(0, list.Count());//リストが空であるかをチェック
 			DoubleLinkedList::Iterator iter = list.Begin();
-#ifdef _DEBUG
 			EXPECT_DEATH((*iter), "iterator: is dummy");
 #else
 			SUCCEED();
@@ -104,17 +104,17 @@ namespace iterator_auto_test
 
 		}
 
-		/**
+		/*********************************************************
 		* @brief		末尾イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-4
 		*				末尾イテレータに対して呼び出した際に、
 		* 				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorGetNodeTest, GetFromEnd)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList list;
 			DoubleLinkedList::Iterator iter = list.End();
-#ifdef _DEBUG
 			EXPECT_DEATH((*iter), "iterator: is dummy");
 #else
 			SUCCEED();
@@ -124,34 +124,34 @@ namespace iterator_auto_test
 	//========== イテレータをリストの末尾に向かって一つ進めるテスト ==========
 	namespace iterator__increment_test
 	{
-		/**
+		/*********************************************************
 		* @brief		リストの参照がない状態で呼び出した際の挙動
 		* @detail		ID:1-5
 		* 				リストの参照がない状態で呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, WhenNoReference)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList::Node node;
 			DoubleLinkedList::Iterator iter(&node, nullptr);
-#ifdef _DEBUG
 			EXPECT_DEATH((++iter), "pre increment: no reference");
 #else
 			SUCCEED();
 #endif // _DEBUG
 		}
 
-		/**
+		/*********************************************************
 		* @brief		リストが空の際の、先頭イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-6
 		* 				リストが空の際の、先頭イテレータに対して呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, WhenEmptyList_IncrementBegin)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList list;//空リストを作成
 			DoubleLinkedList::Iterator iter = list.Begin();
-#ifdef _DEBUG
 			EXPECT_DEATH((++iter), "pre increment: dummy cant increment");
 #else
 			SUCCEED();
@@ -159,29 +159,29 @@ namespace iterator_auto_test
 
 		}
 
-		/**
+		/*********************************************************
 		* @brief		末尾イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-7
 		* 				末尾イテレータに対して呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, IncrementEnd)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList list;
 			DoubleLinkedList::Iterator iter = list.End();
-#ifdef _DEBUG
 			EXPECT_DEATH((++iter), "pre increment: dummy cant increment");
 #else
 			SUCCEED();
 #endif // DEBUG
 		}
 
-		/**
+		/*********************************************************
 		* @brief		リストに二つ以上の要素がある場合に呼び出した際の挙動
 		* @detail		ID:1-8
 		* 				リストに二つ以上の要素がある場合に呼び出した際に、
 		*				次の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, WhenManyElements)
 		{
 			//二つ以上の要素があるリストを作成
@@ -191,17 +191,13 @@ namespace iterator_auto_test
 			list.PushBack(&node2);
 			list.PushBack(&node3);
 
-			/**
-			* リストの先頭から末尾まで呼び出しを行い、
-			* 期待されている要素が格納されているかを確認
-			*/
+			//リストの先頭から末尾まで呼び出しを行い、
+			//期待されている要素が格納されているかを確認
 			DoubleLinkedList::Iterator iter = list.Begin();
 			while (1)
 			{
-				/**
-				* 次の要素へのポインタを先に取得、
-				* イテレータが末尾を向って一つ進めた後指した要素と比較する
-				*/
+				//次の要素へのポインタを先に取得、
+				//イテレータが末尾を向って一つ進めた後指した要素と比較する
 				DoubleLinkedList::Node* next = (&(*iter))->pNext;
 				++iter;
 				if (iter == list.CEnd())break;
@@ -209,12 +205,12 @@ namespace iterator_auto_test
 			}
 		}
 
-		/**
+		/*********************************************************
 		* @brief		前置インクリメントを行った際の挙動
 		* @detail		ID:1-9
 		* 				前置インクリメントを行った際に、
 		*				次の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, PreIncrement)
 		{
 			//二つ以上の要素があるリストを作成
@@ -225,21 +221,19 @@ namespace iterator_auto_test
 
 			DoubleLinkedList::Iterator iter = list.Begin();
 
-			/**
-			* 次の要素へのポインタを先に取得し、
-			* イテレータが末尾を向って一つ進めた後指した要素と比較する
-			*/
+			//次の要素へのポインタを先に取得し、
+			//イテレータが末尾を向って一つ進めた後指した要素と比較する
 			DoubleLinkedList::Node* next = (&(*iter))->pNext;
 			++iter;
 			EXPECT_EQ(next, (&(*iter)));
 		}
 
-		/**
+		/*********************************************************
 		* @brief		後置インクリメントを行った際の挙動
 		* @detail		ID:1-10
 		* 				後置インクリメントを行った際に、
 		*				次の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorIncrementTest, PostIncrement)
 		{
 			//二つ以上の要素があるリストを作成
@@ -250,10 +244,8 @@ namespace iterator_auto_test
 
 			DoubleLinkedList::Iterator iter = list.Begin();
 
-			/**
-			* 次の要素へのポインタを先に取得、
-			* イテレータが末尾を向って一つ進めた後指した要素と比較する
-			*/
+			//次の要素へのポインタを先に取得、
+			//イテレータが末尾を向って一つ進めた後指した要素と比較する
 			DoubleLinkedList::Node* next = (&(*iter))->pNext;
 			++iter;
 			EXPECT_EQ(next, (&(*iter)));
@@ -262,48 +254,49 @@ namespace iterator_auto_test
 	//========== イテレータをリストの先頭に向かって一つ進めるテスト ==========
 	namespace iterator_decrement_test
 	{
-		/**
+		/*********************************************************
 		* @brief		リストの参照がない状態で呼び出した際の挙動
 		* @detail		ID:1-11
 		* 				リストの参照がない状態で呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, WhenNoReference)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList::Node node;
 			DoubleLinkedList::Iterator iter(&node, nullptr);
-#ifdef _DEBUG
 			EXPECT_DEATH((--iter), "pre decrement: no reference");
 #else
 			SUCCEED();
 #endif // DEBUG
 		}
 
-		/**
+		/*********************************************************
 		* @brief		リストが空の際の、末尾イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-12
 		* 				リストが空の際の、末尾イテレータに対して呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, WhenEmptyList_DecrementEnd)
 		{
+#ifdef _DEBUG
 			DoubleLinkedList list;//空であるリストを作成
 			DoubleLinkedList::Iterator iter = list.End();
-#ifdef _DEBUG
 			EXPECT_DEATH((--iter), "pre decrement: list is empty");
 #else
 			SUCCEED();
 #endif // DEBUG
 		}
 
-		/**
+		/*********************************************************
 		* @brief		先頭イテレータに対して呼び出した際の挙動
 		* @detail		ID:1-13
 		* 				先頭イテレータに対して呼び出した際に、
 		*				assert発生するかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, DecrementBegin)
 		{
+#ifdef _DEBUG
 			//要素のあるリストを作成
 			DoubleLinkedList list;
 			DoubleLinkedList::Node node;
@@ -311,19 +304,19 @@ namespace iterator_auto_test
 
 			//ダミーではない先頭イテレータを取得
 			DoubleLinkedList::Iterator iter = list.Begin();
-#ifdef _DEBUG
+
 			EXPECT_DEATH((--iter), "pre decrement: begin cant decrement");
 #else
 			SUCCEED();
 #endif // DEBUG
 		}
 
-		/**
+		/*********************************************************
 		* @brief		リストに二つ以上の要素がある場合に呼び出した際の挙動
 		* @detail		ID:1-14
 		* 				リストに二つ以上の要素がある場合に呼び出した際に、
 		*				前の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, WhenManyElements)
 		{
 			//二つ以上の要素があるリストを作成
@@ -333,18 +326,14 @@ namespace iterator_auto_test
 			list.PushBack(&node2);
 			list.PushBack(&node3);
 
-			/**
-			* リストの末尾から先頭まで呼び出しを行い、
-			* 期待されている要素が格納されているかを確認
-			*/
+			//リストの末尾から先頭まで呼び出しを行い、
+			//期待されている要素が格納されているかを確認
 			DoubleLinkedList::Iterator iter = list.End();
 			--iter;//ダミーノードでなく、最後のノードから
 			while (1)
 			{
-				/**
-				* 前の要素へのポインタを先に取得、
-				* イテレータが先頭を向って一つ進めた後指した要素と比較する
-				*/
+				//前の要素へのポインタを先に取得、
+				//イテレータが先頭を向って一つ進めた後指した要素と比較する
 				DoubleLinkedList::Node* prev = (&(*iter))->pPrev;
 				--iter;
 				EXPECT_EQ(prev, (&(*iter)));
@@ -357,12 +346,12 @@ namespace iterator_auto_test
 			}
 		}
 
-		/**
+		/*********************************************************
 		* @brief		前置インクリメントを行った際の挙動
 		* @detail		ID:1-15
 		* 				前置インクリメントを行った際に、
 		*				前の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, PreDecrement)
 		{
 			//二つ以上の要素があるリストを作成
@@ -373,21 +362,20 @@ namespace iterator_auto_test
 
 			DoubleLinkedList::Iterator iter = list.End();
 			--iter;//ダミーノードでなく、最後のノードから
-			/**
-			* 前の要素へのポインタを先に取得、
-			* イテレータが先頭を向って一つ進めた後指した要素と比較する
-			*/
+
+			//前の要素へのポインタを先に取得、
+			//イテレータが先頭を向って一つ進めた後指した要素と比較する
 			DoubleLinkedList::Node* prev = (&(*iter))->pPrev;
 			--iter;
 			EXPECT_EQ(prev, (&(*iter)));
 		}
 
-		/**
+		/*********************************************************
 		* @brief		後置インクリメントを行った際の挙動
 		* @detail		ID:1-10
 		* 				後置インクリメントを行った際に、
 		*				前の要素を指すのかを確認します。
-		*/
+		********************************************************/
 		TEST(IteratorDecrementTest, PostDecrement)
 		{
 			//二つ以上の要素があるリストを作成
@@ -398,10 +386,9 @@ namespace iterator_auto_test
 
 			DoubleLinkedList::Iterator iter = list.End();
 			iter--;//ダミーノードでなく、最後のノードから
-			/**
-			* 前の要素へのポインタを先に取得、
-			* イテレータが先頭を向って一つ進めた後指した要素と比較する
-			*/
+			
+			//前の要素へのポインタを先に取得、
+			//イテレータが先頭を向って一つ進めた後指した要素と比較する
 			DoubleLinkedList::Node* prev = (&(*iter))->pPrev;
 			iter--;
 			EXPECT_EQ(prev, (&(*iter)));
@@ -410,23 +397,23 @@ namespace iterator_auto_test
 	//========== イテレータのコピーを行うテスト ==========
 	namespace iterator_copy_test
 	{
-		/**
+		/*********************************************************
 		* @brief		ConstIteratorから、Iteratorのコピーが作成されないかをチェック
 		* @detail		ID:1-17
 		* 				ConstIteratorから、Iteratorのコピーが作成されないかをチェックします。
 		*				コンパイルエラーになることを確認します。(手動テスト)
-		*/
+		********************************************************/
 		//TEST(IteratorCopyTest, ConstIteratorCopyIterator)
 		//{
 		//	DoubleLinkedList::Iterator iter();
 		//	DoubleLinkedList::ConstIterator constIter = iter;//ConstIteratorから、Iteratorのコピーを作成
 		//}
 
-		/**
+		/*********************************************************
 		* @brief		コピーコンストラクト後の値がコピー元と等しいことをチェック
 		* @detail		ID:1-18
 		* 				コピーコンストラクト後の値がコピー元と等しいことをチェックします。
-		*/
+		********************************************************/
 		TEST(IteratorCopyTest, AfterCopy_CheckDataEqual)
 		{
 			DoubleLinkedList list;
@@ -450,12 +437,12 @@ namespace iterator_auto_test
 	//========== イテレータの代入を行うテスト ==========
 	namespace iterator_assign_test
 	{
-		/**
+		/*********************************************************
 		* @brief		IteratorにConstIteratorを代入できない事をチェック
 		* @detail		ID:1-19
 		* 				IteratorにConstIteratorを代入できない事をチェックします。
 		*				コンパイルエラーになることを確認します。(手動テスト)
-		*/
+		********************************************************/
 		//TEST(IteratorAssignTest, AssginConstIteratorToIterator)
 		//{
 		//	DoubleLinkedList::ConstIterator constIter;
@@ -464,11 +451,11 @@ namespace iterator_auto_test
 		//	iter = constIter;
 		//}
 
-		/**
+		/*********************************************************
 		* @brief		代入後の値がコピー元と等しいことをチェック
 		* @detail		ID:1-20
 		* 				代入後の値がコピー元と等しいことをチェックします。
-		*/
+		********************************************************/
 		TEST(IteratorAssignTest, AfterAssign_CheckDataEqual)
 		{
 			DoubleLinkedList list;
@@ -493,12 +480,12 @@ namespace iterator_auto_test
 	//========== 二つのイテレータが同一のものであるか、比較を行うテスト ==========
 	namespace iterator_equal_test
 	{
-		/**
+		/*********************************************************
 		* @brief		リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
 		* @detail		ID:1-21
 		* 				リストが空の状態での先頭イテレータと末尾イテレータを比較した際に、
 		*				trueが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorEqualTest, WhenEmptyList_CheckBeginAndEnd)
 		{
 			DoubleLinkedList list;
@@ -510,12 +497,12 @@ namespace iterator_auto_test
 			EXPECT_TRUE(begin == end);
 		}
 
-		/**
+		/*********************************************************
 		* @brief		同一のイテレータを比較した際の挙動
 		* @detail		ID:1-22
 		* 				同一のイテレータを比較した際に、
 		*				trueが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorEqualTest, WhenEmptyList_CheckSame)
 		{
 			DoubleLinkedList list;
@@ -529,12 +516,12 @@ namespace iterator_auto_test
 			EXPECT_TRUE(iter1 == iter2);
 		}
 
-		/**
+		/*********************************************************
 		* @brief		異なるイテレータを比較した際の挙動
 		* @detail		ID:1-23
 		* 				異なるイテレータを比較した際に、
 		*				falseが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorEqualTest, WhenEmptyList_CheckDifferent)
 		{
 			DoubleLinkedList list;
@@ -552,12 +539,12 @@ namespace iterator_auto_test
 	//========== 二つのイテレータが異なるものであるか、比較を行うテスト ==========
 	namespace iterator_notEqual_test
 	{
-		/**
+		/*********************************************************
 		* @brief		リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
 		* @detail		ID:1-24
 		* 				リストが空の状態での先頭イテレータと末尾イテレータを比較した際に、
 		*				trueが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorNotEqualTest, WhenEmptyList_CheckBeginAndEnd)
 		{
 			DoubleLinkedList list;
@@ -569,12 +556,12 @@ namespace iterator_auto_test
 			EXPECT_FALSE(begin != end);
 		}
 
-		/**
+		/*********************************************************
 		* @brief		同一のイテレータを比較した際の挙動
 		* @detail		ID:1-25
 		* 				同一のイテレータを比較した際に、
 		*				trueが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorNotEqualTest, WhenEmptyList_CheckSame)
 		{
 			DoubleLinkedList list;
@@ -588,12 +575,12 @@ namespace iterator_auto_test
 			EXPECT_FALSE(iter1 != iter2);
 		}
 
-		/**
+		/*********************************************************
 		* @brief		異なるイテレータを比較した際の挙動
 		* @detail		ID:1-26
 		* 				異なるイテレータを比較した際に、
 		*				falseが返る場合成功です。
-		*/
+		********************************************************/
 		TEST(IteratorNotEqualTest, WhenEmptyList_CheckDifferent)
 		{
 			DoubleLinkedList list;

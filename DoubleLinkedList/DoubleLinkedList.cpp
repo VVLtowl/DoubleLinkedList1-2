@@ -1,3 +1,7 @@
+/*********************************************************
+* @brief	双方向リストの詳細定義
+* @date		2022/10/04
+********************************************************/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <string.h>
@@ -6,9 +10,9 @@
 
 
 //==========  ノード構造体 ==========
-/**
+/*********************************************************
 * @brief	コンストラクタ　
-*/
+********************************************************/
 DoubleLinkedList::Node::Node() :
 	pPrev(nullptr),
 	pNext(nullptr),
@@ -16,9 +20,9 @@ DoubleLinkedList::Node::Node() :
 {
 }
 
-/**
+/*********************************************************
 * @brief	コンストラクタ　スコアデータある場合
-*/
+********************************************************/
 DoubleLinkedList::Node::Node(int score, const char* name) :
 	pPrev(nullptr),
 	pNext(nullptr),
@@ -30,11 +34,12 @@ DoubleLinkedList::Node::Node(int score, const char* name) :
 
 
 //==========  コンストイテレータ ==========
-/**
+/*********************************************************
 * @brief	有効なイテレータであるか
 * @detail	リストの参照がある、
-*			同じリストであることが必要。
-*/
+*			同じリストであることを確認する。
+* @return	全条件足した場合trueを返す、ほかの場合falseを返す
+********************************************************/
 bool DoubleLinkedList::ConstIterator::IsVaild(const DoubleLinkedList* const list)
 {
 	bool hasReference = (m_pNode != nullptr && m_pList != nullptr);//リストの参照があるか
@@ -43,12 +48,13 @@ bool DoubleLinkedList::ConstIterator::IsVaild(const DoubleLinkedList* const list
 	return hasReference && sameList;
 }
 
-/**
+/*********************************************************
 * @brief	リストの先頭に向かって一つ進める（前置デクリメント）
 * @detail	リストの参照がない場合失敗になる。
 *			リストが空である場合失敗になる。
 *			直前ノードは先頭ノードの場合失敗になる。
-*/
+* @return	演算された後のイテレータを返す
+********************************************************/
 DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator--()
 {
 	assert(m_pNode && m_pList && "pre decrement: no reference");// リストの参照があるかの確認
@@ -60,11 +66,12 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator--()
 	return (*this);
 }
 
-/**
+/*********************************************************
 * @brief	リストの末尾に向かって一つ進める（前置インクリメント）
 * @detail	リストの参照がない場合失敗になる。
 *			ノードはダミーの場合失敗になる。
-*/
+* @return	演算された後のイテレータを返す
+********************************************************/
 DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator++()
 {
 	assert(m_pNode && m_pList && "pre increment: no reference");// リストの参照があるかの確認
@@ -75,13 +82,14 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator++()
 	return (*this);
 }
 
-/**
+/*********************************************************
 * @brief	リストの末尾に向かって一つ進める（後置インクリメント）
 * @detail	リストの参照がない場合失敗になる。
 *			リストが空である場合失敗になる。
 *			ノードは先頭ノードの場合失敗になる。
-*/
-DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator--(int i)
+* @return	演算された後のイテレータを返す
+********************************************************/
+DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator--(int i)
 {
 	assert(m_pNode && m_pList && "post decrement: no reference");// リストの参照があるかの確認
 	assert(m_pList->Count() > 0 && "post decrement: list is empty");//リストが空ではないかの確認
@@ -92,12 +100,13 @@ DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator--(int 
 	return (*this);
 }
 
-/**
+/*********************************************************
 * @brief	リストの末尾に向かって一つ進める（後置インクリメント）
 * @detail	リストの参照がない場合失敗になる。
 *			直後ノードはダミーの場合失敗になる。
-*/
-DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator++(int i)
+* @return	演算された後のイテレータを返す
+********************************************************/
+DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator++(int i)
 {
 	assert(m_pNode && m_pList && "post increment: no reference");// リストの参照があるかの確認
 	assert(m_pNode->isDummy == false && "post increment: dummy cant increment");// ダミーではないかの確認
@@ -108,11 +117,12 @@ DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator++(int 
 }
 
 
-/**
+/*********************************************************
 * @brief	イテレータの指す要素を取得する(const版)
 * @detail	リストの参照がない場合失敗になる。
 * 			ノードはダミーの場合失敗になる。
-*/
+* @return	指した要素を返す
+********************************************************/
 const DoubleLinkedList::Node& DoubleLinkedList::ConstIterator::operator*() const
 {
 	assert(m_pNode && m_pList && "constIterator: no reference");// リストの参照があるかの確認
@@ -121,29 +131,31 @@ const DoubleLinkedList::Node& DoubleLinkedList::ConstIterator::operator*() const
 	return (*m_pNode);
 }
 
-/**
+/*********************************************************
 * @brief	指す要素へのポインタを取得する(const版)
 * @detail	(*ConstIterator)の場合、ダミーの方がassertを起こすため、
 *			ポインタを用意する。
-*/
+* @return	要素へのポインタを返す
+********************************************************/
 const DoubleLinkedList::Node* DoubleLinkedList::ConstIterator::operator&() const
 {
 	return m_pNode;
 }
 
-/**
+/*********************************************************
 * @brief	コピーを行う（コピーコンストラクタ）
 * @detail	宣言時、引数、戻り値の3つの動作でコピーがとられた時に実行される。
-*/
+********************************************************/
 DoubleLinkedList::ConstIterator::ConstIterator(const ConstIterator& constIter)
 {
 	m_pNode = constIter.m_pNode;
 	m_pList = constIter.m_pList;
 }
 
-/**
+/*********************************************************
 * @brief	代入を行う
-*/
+* @return	代入を行ったのイテレータを返す
+********************************************************/
 DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator=(const ConstIterator& constIter)
 {
 	m_pNode = constIter.m_pNode;
@@ -152,28 +164,31 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator=(cons
 	return *this;
 }
 
-/**
+/*********************************************************
 * @brief	同一か比較する
-*/
+* @return	同一の場合trueを返す、異なる場合falseを返す
+********************************************************/
 bool DoubleLinkedList::ConstIterator::operator==(const ConstIterator& iter)
 {
 	return m_pNode == iter.m_pNode;
 }
 
-/**
+/*********************************************************
 * @brief	異なるか比較する
-*/
+* @return	異なる場合trueを返す、同一の場合falseを返す
+********************************************************/
 bool DoubleLinkedList::ConstIterator::operator!=(const ConstIterator& iter)
 {
 	return m_pNode != iter.m_pNode;
 }
 
 //==========  イテレータ ==========
-/**
+/*********************************************************
 * @brief	イテレータの指す要素を取得する(非const版)
 * @detail	リストの参照がない場合失敗になる。
 * 			ノードはダミーの場合失敗になる。
-*/
+* @return	指した要素を返す
+********************************************************/
 DoubleLinkedList::Node& DoubleLinkedList::Iterator::operator*()
 {
 	assert(m_pNode && m_pList && "iterator: no reference");// リストの参照があるかの確認
@@ -182,24 +197,25 @@ DoubleLinkedList::Node& DoubleLinkedList::Iterator::operator*()
 	return *m_pNode;
 }
 
-/**
+/*********************************************************
 * @brief	指す要素へのポインタを取得する(非const版)
 * @detail	(*Iterator)の場合、ダミーの方がassertを起こすため、ポインタを用意する。
-*/
+* @return	要素へのポインタを返す
+********************************************************/
 DoubleLinkedList::Node* DoubleLinkedList::Iterator::operator&()
 {
 	return m_pNode;
 }
 
 //==========  双方向リスト ==========
-/**
+/*********************************************************
 * @brief	データを末尾後に追加
 * @detail	先頭ノードポインタの指すところが空の場合、新しいノードへ指す。
 *			指すところ対象ががある場合、末尾ノードと新ノードを双方向リンクを設定し、
 *			末尾ノードポンタを新ノートへ指す。
 * @return	追加成功の場合trueを返す
 *			追加失敗の場合falseを返す
-*/
+********************************************************/
 bool DoubleLinkedList::PushBack(DoubleLinkedList::Node* newNode)
 {
 	ConstIterator iter = CEnd();
@@ -207,12 +223,12 @@ bool DoubleLinkedList::PushBack(DoubleLinkedList::Node* newNode)
 }
 
 
-/**
+/*********************************************************
 * @brief	データ数を取得する
 * @detail	ループで加算して、データ数を計算する。
 *			constメソッドである。
 * @return	データ数を返す
-*/
+********************************************************/
 int DoubleLinkedList::Count() const
 {
 	//要素がない場合、0を返す
@@ -230,14 +246,14 @@ int DoubleLinkedList::Count() const
 	return count;
 }
 
-/**
+/*********************************************************
 * @brief	データの挿入
 * @detail	リストが空の場合末尾へ挿入、
 *			空ではない場合イテレータが有効であるかを確認、
 *			有効ではない場合、挿入失敗。
 * @return	挿入成功の場合trueを返す
 *			挿入失敗の場合falseを返す
-*/
+********************************************************/
 bool DoubleLinkedList::Insert(ConstIterator& positionIter, Node* newNode)
 {
 	//要素がない場合、挿入失敗
@@ -275,14 +291,14 @@ bool DoubleLinkedList::Insert(ConstIterator& positionIter, Node* newNode)
 	return true;
 }
 
-/**
+/*********************************************************
 * @brief	データの削除
 * @detail	リストが空ではないかの確認、
 *			空ではない場合イテレータが有効であるかの確認、
 *			有効の場合ダミーではないかの確認。
 * @return	削除成功の場合trueを返す
 *			削除失敗の場合falseを返す
-*/
+********************************************************/
 bool DoubleLinkedList::Remove(ConstIterator& positionIter)
 {
 	//リストが空の場合、削除失敗
@@ -308,12 +324,12 @@ bool DoubleLinkedList::Remove(ConstIterator& positionIter)
 }
 
 
-/**
+/*********************************************************
 * @brief	先頭イテレータ取得する
 * @detail	リストが空である場合、ダミーノードを指すイテレータを返す、
 *			空ではない場合、先頭ノードを指すイテレータを返す。
-* @return
-*/
+* @return	先頭イテレータを返す
+********************************************************/
 DoubleLinkedList::Iterator DoubleLinkedList::Begin()
 {
 	//リストが空である場合
@@ -323,12 +339,12 @@ DoubleLinkedList::Iterator DoubleLinkedList::Begin()
 	return Iterator(m_pDummy->pNext, this);
 }
 
-/**
+/*********************************************************
 * @brief	先頭コンストイテレータ取得する
 * @detail	リストが空である場合、ダミーノードを指すコンストイテレータを返す
 *			空ではない場合、先頭ノードを指すコンストイテレータを返す。
-* @return
-*/
+* @return	先頭コンストイテレータを返す
+********************************************************/
 DoubleLinkedList::ConstIterator DoubleLinkedList::CBegin() const
 {
 	//リストが空である場合
@@ -338,21 +354,21 @@ DoubleLinkedList::ConstIterator DoubleLinkedList::CBegin() const
 	return ConstIterator(HeadNode(), this);
 }
 
-/**
+/*********************************************************
 * @brief	末尾イテレータ取得する
 * @detail	ダミーノードを指すイテレータを返す。
-* @return
-*/
+* @return	末尾イテレータを返す
+********************************************************/
 DoubleLinkedList::Iterator DoubleLinkedList::End()
 {
 	return Iterator(m_pDummy, this);
 }
 
-/**
+/*********************************************************
 * @brief	末尾イテレータ取得する
 * @detail	ダミーノードを指すコンストイテレータを返す。
-* @return
-*/
+* @return	末尾コンストイテレータを返す
+********************************************************/
 DoubleLinkedList::ConstIterator DoubleLinkedList::CEnd() const
 {
 	return ConstIterator(m_pDummy, this);

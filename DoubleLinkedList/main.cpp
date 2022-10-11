@@ -1,7 +1,7 @@
-/**
+/*********************************************************
 * @brief	双方向リストで読み取ったデータを標準出力に表示
 * @date		2022/10/04
-*/
+********************************************************/
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
@@ -20,7 +20,7 @@ int main(void)
 		FILE* fp; 
 		char fileName[] = "Scores.txt";
 
-		/**ファイルを開く、失敗すると終了*/
+		//ファイルを開く、失敗すると終了
 		{
 			fp = fopen(fileName, "r");
 			if (fp == NULL) {

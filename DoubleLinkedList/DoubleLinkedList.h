@@ -1,3 +1,7 @@
+/*********************************************************
+* @brief	双方向リストのヘッダーファイル
+* @date		2022/10/04
+********************************************************/
 #pragma once
 #include "ScoreData.h"
 
@@ -35,8 +39,8 @@ public:
 
 		ConstIterator& operator--();								//リストの先頭に向かって一つ進める
 		ConstIterator& operator++();								//リストの末尾に向かって一つ進める
-		ConstIterator operator--(int i);							//リストの先頭に向かって一つ進める
-		ConstIterator operator++(int i);							//リストの末尾に向かって一つ進める
+		ConstIterator& operator--(int i);							//リストの先頭に向かって一つ進める
+		ConstIterator& operator++(int i);							//リストの末尾に向かって一つ進める
 		const Node& operator*()const;								//イテレータの指す要素を取得する(const版)
 
 		ConstIterator(const ConstIterator& constIter);				//コピーを行う（コピーコンストラクタ）
@@ -71,7 +75,7 @@ public:
 	~DoubleLinkedList() {								//デストラクタ定義
 		delete m_pDummy;
 	}
-	DoubleLinkedList() {									//コンストラクタ定義
+	DoubleLinkedList() {								//コンストラクタ定義
 		m_pDummy = new Node();
 		m_pDummy->isDummy = true;
 	}
