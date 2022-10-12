@@ -4,7 +4,7 @@
 ********************************************************/
 
 #include "gtest/gtest.h"
-#include "../DoubleLinkedList1-2/DoubleLinkedList/DoubleLinkedList.h"
+#include "../DoubleLinkedList/DoubleLinkedList.h"
 
 //双方向リストの単体テスト
 #define GT_TEST_DOUBLE_LINKED_LIST

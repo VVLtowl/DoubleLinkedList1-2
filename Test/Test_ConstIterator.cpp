@@ -3,7 +3,7 @@
 * @date			2022/10/06
 ********************************************************/
 #include "gtest/gtest.h"
-#include "../DoubleLinkedList1-2/DoubleLinkedList/DoubleLinkedList.h"
+#include "../DoubleLinkedList/DoubleLinkedList.h"
 
 //イテレータの単体テスト
 #define GT_TEST_ITERATOR
