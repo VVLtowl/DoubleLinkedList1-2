@@ -1001,31 +1001,19 @@ namespace doubleLinkedList_test
 			DoubleLinkedList::Iterator head = list.Begin();
 			DoubleLinkedList::Node newNode1;
 			EXPECT_TRUE(list.Insert(head, &newNode1));
-
-			//ダミーノードの場合要素を取得する際にAssert発生
-			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");
-#else
-			SUCCEED();
-#endif // _DEBUG
+			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");//ダミーノードの場合要素を取得する際にAssert発生
 
 			//中央に挿入
 			DoubleLinkedList::Iterator middle(&node2, &list);
 			DoubleLinkedList::Node newNode2;
 			EXPECT_TRUE(list.Insert(middle, &newNode2));
-#ifdef _DEBUG
-			//ダミーノードの場合要素を取得する際にAssert発生
-			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");
-#else
-			SUCCEED();
-#endif // _DEBUG
+			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");//ダミーノードの場合要素を取得する際にAssert発生
 
 			//末尾に挿入
 			DoubleLinkedList::Iterator tail = list.End();
 			DoubleLinkedList::Node newNode3;
 			EXPECT_TRUE(list.Insert(tail, &newNode3));
-#ifdef _DEBUG
-			//ダミーノードの場合要素を取得する際にAssert発生
-			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");
+			EXPECT_DEATH(*list.CEnd(), "constIterator: is dummy");//ダミーノードの場合要素を取得する際にAssert発生
 #else
 			SUCCEED();
 #endif // _DEBUG
