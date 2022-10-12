@@ -8,7 +8,6 @@
 #include <string>
 #include <iostream>
 #include "DoubleLinkedList.h"
-using namespace std;
 
 int main(void)
 {
@@ -24,19 +23,17 @@ int main(void)
 		{
 			fp = fopen(fileName, "r");
 			if (fp == NULL) {
-				cout << fileName << "file open error!" << endl;
+				std::cout << fileName << "file open error!" << std::endl;
 				return -1;
 			}
 			else {
-				cout << fileName << "file opened!" << endl;
+				std::cout << fileName << "file opened!" << std::endl;
 			}
 		}
 
 		
-		/**
-		* ループで1行ずつ読み取った内容をデータに格納、
-		* 内容が取らない場合ループ終了
-		*/
+		//ループで1行ずつ読み取った内容をデータに格納、
+		//内容が取らない場合ループ終了
 		{
 			int score;					//スコアデータを一時格納用
 			char name[WORD_SIZE];		//名前データを一時格納用
@@ -44,22 +41,21 @@ int main(void)
 			while (fscanf(fp, "%d\t%s", &score, name) != EOF) {
 #if 0
 				//1行ずつ読み取った内容を確認
-				cout << name << ":" << score << endl;//test
+				std::cout << name << ":" << score << std::endl;//test
 #endif
 
 				//スコアデータを作成して、データを格納
-				DoubleLinkedList::Node* newNode = new DoubleLinkedList::Node;
-				strcpy(newNode->scoreData.name, name);//名前データ入力
-				newNode->scoreData.score = score;//スコアデータ入力
+				ScoreData data(score, name);
 
-				list.PushBack(newNode);
+				DoubleLinkedList::ConstIterator end = list.End();
+				list.Insert(end, data);
 			}
 		}
 		
-
 		//ファイルを閉じる
 		fclose(fp);
 	}
+
 
 	//イテレートして「格納した順で」標準出力に表示
 	{
@@ -67,10 +63,10 @@ int main(void)
 		
 		for (; it != list.End(); ++it)
 		{
-			cout << (*it).scoreData.name
-				<< (strlen((*it).scoreData.name) < 8 ? "\t\t:" : "\t:")//整列するためです
-				<< (*it).scoreData.score 
-				<< endl;
+			std::cout << (*it).name
+				<< ((*it).name.size() < 8 ? "\t\t:" : "\t:")//整列するためです
+				<< (*it).score 
+				<< std::endl;
 		}
 	}
 

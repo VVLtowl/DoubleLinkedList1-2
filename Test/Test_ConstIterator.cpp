@@ -6,7 +6,7 @@
 #include "../DoubleLinkedList/DoubleLinkedList.h"
 
 //イテレータの単体テスト
-#define GT_TEST_ITERATOR
+//#define GT_TEST_ITERATOR
 
 #if defined GT_TEST_ITERATOR
 namespace iterator_auto_test
