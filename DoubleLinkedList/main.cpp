@@ -23,11 +23,11 @@ int main(void)
 		{
 			fp = fopen(fileName, "r");
 			if (fp == NULL) {
-				std::cout << fileName << "file open error!" << std::endl;
+				std::cout << fileName << " : file open error!" << std::endl;
 				return -1;
 			}
 			else {
-				std::cout << fileName << "file opened!" << std::endl;
+				std::cout << fileName << " : file opened!" << std::endl;
 			}
 		}
 
