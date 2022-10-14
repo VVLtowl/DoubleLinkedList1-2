@@ -36,7 +36,7 @@ int main(void)
 		//内容が取らない場合ループ終了
 		{
 			int score;					//スコアデータを一時格納用
-			char name[WORD_SIZE];		//名前データを一時格納用
+			char name[50];				//名前データを一時格納用
 
 			while (fscanf(fp, "%d\t%s", &score, name) != EOF) {
 #if 0
@@ -59,9 +59,9 @@ int main(void)
 
 	//イテレートして「格納した順で」標準出力に表示
 	{
-		DoubleLinkedList::Iterator it = list.Begin();
-		
-		for (; it != list.End(); ++it)
+		auto it = list.CBegin();
+		auto end = list.CEnd();
+		for (; it != end; ++it)
 		{
 			std::cout << (*it).name
 				<< ((*it).name.size() < 8 ? "\t\t:" : "\t:")//整列するためです

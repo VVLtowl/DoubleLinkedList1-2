@@ -8,23 +8,6 @@
 #include <assert.h>
 #include "DoubleLinkedList.h"
 
-//==========  ノード構造体 ==========
-
-DoubleLinkedList::Node::Node() :
-	pPrev(nullptr),
-	pNext(nullptr)
-{
-}
-
-DoubleLinkedList::Node::Node(const ScoreData& _data) :
-	pPrev(nullptr),
-	pNext(nullptr)
-{
-	scoreData.score = _data.score;
-	scoreData.name = _data.name;
-}
-
-
 //==========  コンストイテレータ ==========
 
 bool DoubleLinkedList::ConstIterator::IsVaild(const DoubleLinkedList* const list)
@@ -38,8 +21,8 @@ bool DoubleLinkedList::ConstIterator::IsVaild(const DoubleLinkedList* const list
 DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator--()
 {
 	assert(m_pNode && m_pList && "pre decrement: no reference");// リストの参照があるかの確認
-	assert(m_pList->Count() > 0 && "pre decrement: list is empty");//リストが空ではないかの確認
-	assert(m_pNode->pPrev->scoreData.name != "dummy" && "pre decrement: begin cant decrement");// 先頭ノードではないかの確認
+	assert(m_pList->m_Count > 0 && "pre decrement: list is empty");//リストが空ではないかの確認
+	assert(m_pNode->pPrev != m_pList->m_pDummy && "pre decrement: begin cant decrement");// 先頭ノードではないかの確認
 
 	m_pNode = m_pNode->pPrev;
 
@@ -49,7 +32,7 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator--()
 DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator++()
 {
 	assert(m_pNode && m_pList && "pre increment: no reference");// リストの参照があるかの確認
-	assert(m_pNode->scoreData.name != "dummy" && "pre increment: dummy cant increment");// ダミーではないかの確認
+	assert(m_pNode != m_pList->m_pDummy && "pre increment: dummy cant increment");// ダミーではないかの確認
 
 	m_pNode = m_pNode->pNext;
 
@@ -59,22 +42,24 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator++()
 DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator--(int i)
 {
 	assert(m_pNode && m_pList && "post decrement: no reference");// リストの参照があるかの確認
-	assert(m_pList->Count() > 0 && "post decrement: list is empty");//リストが空ではないかの確認
-	assert(m_pNode->pPrev->scoreData.name != "dummy" && "post decrement: begin cant decrement");// 先頭ノードではないかの確認
+	assert(m_pList->m_Count > 0 && "post decrement: list is empty");//リストが空ではないかの確認
+	assert(m_pNode->pPrev != m_pList->m_pDummy && "post decrement: begin cant decrement");// 先頭ノードではないかの確認
 
+	ConstIterator iter(*this);//運算前のイテレータをコピー
 	m_pNode = m_pNode->pPrev;
 
-	return (*this);
+	return iter;
 }
 
 DoubleLinkedList::ConstIterator DoubleLinkedList::ConstIterator::operator++(int i)
 {
 	assert(m_pNode && m_pList && "post increment: no reference");// リストの参照があるかの確認
-	assert(m_pNode->scoreData.name != "dummy" && "post increment: dummy cant increment");// ダミーではないかの確認
+	assert(m_pNode != m_pList->m_pDummy && "post increment: dummy cant increment");// ダミーではないかの確認
 
+	ConstIterator iter(*this);//運算前のイテレータをコピー
 	m_pNode = m_pNode->pNext;
 
-	return (*this);
+	return iter;
 }
 
 DoubleLinkedList::ConstIterator::ConstIterator(const ConstIterator& constIter)
@@ -95,7 +80,7 @@ DoubleLinkedList::ConstIterator& DoubleLinkedList::ConstIterator::operator=(cons
 const ScoreData& DoubleLinkedList::ConstIterator::operator*() const
 {
 	assert(m_pNode && m_pList && "constIterator: no reference");// リストの参照があるかの確認
-	assert(m_pNode->scoreData.name != "dummy" && "constIterator: is dummy");
+	assert(m_pNode != m_pList->m_pDummy && "constIterator: is dummy");
 
 	return (*m_pNode).scoreData;
 }
@@ -116,17 +101,18 @@ bool DoubleLinkedList::ConstIterator::operator!=(const ConstIterator& iter)const
 ScoreData& DoubleLinkedList::Iterator::operator*()
 {
 	assert(m_pNode && m_pList && "iterator: no reference");// リストの参照があるかの確認
-	assert(m_pNode->scoreData.name != "dummy" && "iterator: is dummy");
+	assert(m_pNode != m_pList->m_pDummy && "iterator: is dummy");
 
 	return (*m_pNode).scoreData;
 }
 
 
 //==========  双方向リスト ==========
+
 DoubleLinkedList::~DoubleLinkedList()
 {
 	//空の場合何もしない
-	if (Count() == 0)return;
+	if (m_Count == 0)return;
 
 	//先頭から、末尾までノードを削除
 	Node* del = m_pDummy->pNext;//先頭ノード取得
@@ -152,75 +138,67 @@ DoubleLinkedList::~DoubleLinkedList()
 
 DoubleLinkedList::DoubleLinkedList()
 {
+	m_Count = 0;
 	m_pDummy = new Node;
+
+	m_pDummy->pPrev = m_pDummy;
+	m_pDummy->pNext = m_pDummy;
 }
 
 bool DoubleLinkedList::Insert(ConstIterator& positionIter,const ScoreData& data)
 {
-	//データがない場合、挿入失敗
-	if (data.name == "dummy")
-		return false;
-
 	//新要素のノードを作成
-	Node* newNode = new Node(data);
-
-	//リストが空の場合末尾へ挿入
-	if (Count() == 0)
-	{
-		m_pDummy->pNext = newNode;//新要素を先頭要素に設定
-		newNode->pPrev = m_pDummy;
-		newNode->pNext = m_pDummy;
-		m_pDummy->pPrev = newNode;
-		return true;
-	}
+	Node* newNode = new Node;
+	newNode->scoreData = data;
 
 	//イテレータ有効であるかの確認
 	if (positionIter.IsVaild(this) == false)
+	{
 		return false;
+	}
 
 	//挿入を行う
-	Node* prev = positionIter.GetNode()->pPrev;
-	Node* next = positionIter.GetNode();
+	Node* prev = positionIter.m_pNode->pPrev;
+	Node* next = positionIter.m_pNode;
 	prev->pNext = newNode;
 	newNode->pPrev = prev;
 	newNode->pNext = next;
 	next->pPrev = newNode;
+	m_Count++;
 	return true;
 }
 
 bool DoubleLinkedList::Remove(ConstIterator& positionIter)
 {
 	//リストが空の場合、削除失敗
-	if (Count() == 0)
+	if (m_Count == 0)
+	{
 		return false;
+	}
 
 	//イテレータ有効ではない場合、削除失敗
 	if (positionIter.IsVaild(this) == false)
+	{
 		return false;
+	}
 
 	//ダミーノードを指す場合、削除失敗
-	if (positionIter.GetNode()->scoreData.name == "dummy")
+	if (positionIter.m_pNode == m_pDummy)
+	{
 		return false;
+	}
 
 	//削除を行う
-	Node* prev = positionIter.GetNode()->pPrev;
-	Node* next = positionIter.GetNode()->pNext;
+	Node* prev = positionIter.m_pNode->pPrev;
+	Node* next = positionIter.m_pNode->pNext;
 	prev->pNext = next;
 	next->pPrev = prev;
+	m_Count--;
 	return true;
 }
 
 DoubleLinkedList::Iterator DoubleLinkedList::Begin()
 {
-	//リストが空である場合
-	if (Count() == 0)
-	{
-		Iterator iter;
-		iter.m_pNode = m_pDummy;
-		iter.m_pList = this;
-		return iter;
-	}
-
 	Iterator iter;
 	iter.m_pNode = m_pDummy->pNext;
 	iter.m_pList = this;
@@ -238,32 +216,11 @@ DoubleLinkedList::Iterator DoubleLinkedList::End()
 
 int DoubleLinkedList::Count() const
 {
-	//先頭要素がない場合、0を返す
-	if (m_pDummy->pNext == nullptr)
-		return 0;
-
-	//データ数計算
-	int count = 0;
-	Node* node = m_pDummy->pNext;//先頭要素へのポインタを取得
-	while (node != m_pDummy)
-	{
-		count++;
-		node = node->pNext;
-	}
-	return count;
+	return m_Count;
 }
 
 DoubleLinkedList::ConstIterator DoubleLinkedList::CBegin() const
 {
-	//リストが空である場合、ダミーイテレータを返す
-	if (Count() == 0)
-	{
-		ConstIterator constIter;
-		constIter.m_pNode = m_pDummy;
-		constIter.m_pList = this;
-		return constIter;
-	}
-
 	ConstIterator constIter;
 	constIter.m_pNode = m_pDummy->pNext;
 	constIter.m_pList = this;
