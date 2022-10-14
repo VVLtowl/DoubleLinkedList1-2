@@ -35,9 +35,8 @@ int main(void)
 		//ループで1行ずつ読み取った内容をデータに格納、
 		//内容が取らない場合ループ終了
 		{
-			int score;					//スコアデータを一時格納用
-			char name[50];				//名前データを一時格納用
-
+			int score;//スコアデータを一時格納用
+			char name[50];//名前データを一時格納用
 			while (fscanf(fp, "%d\t%s", &score, name) != EOF) {
 #if 0
 				//1行ずつ読み取った内容を確認
@@ -47,7 +46,7 @@ int main(void)
 				//スコアデータを作成して、データを格納
 				ScoreData data(score, name);
 
-				DoubleLinkedList::ConstIterator end = list.End();
+				auto end = list.End();
 				list.Insert(end, data);
 			}
 		}
