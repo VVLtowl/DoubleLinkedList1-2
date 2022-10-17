@@ -9,8 +9,12 @@
 #include "../DoubleLinkedList/ScoreData.h"
 #include <string>
 
+//========== プロトタイプ宣言 ==========
+bool CheckListValue(const ScoreData* datas, const int count, const DoubleLinkedList& list);
 
-//========== 指定要素数のリストのフィクスチャ ==========
+/*********************************************************
+* @brief		指定要素数のリストのフィクスチャ
+********************************************************/
 class ListFixture : public ::testing::Test
 {
 protected:
@@ -55,6 +59,8 @@ protected:
 	********************************************************/
 	void InputOneData()
 	{
+		ClearList();
+
 		ScoreData data;
 		DoubleLinkedList::Iterator end;
 
@@ -77,6 +83,8 @@ protected:
 	********************************************************/
 	void InputTwoData()
 	{
+		ClearList();
+
 		ScoreData data;
 		DoubleLinkedList::Iterator end;
 
@@ -104,6 +112,8 @@ protected:
 	********************************************************/
 	void InputThreeData()
 	{
+		ClearList();
+
 		ScoreData data;
 		DoubleLinkedList::Iterator end;
 
@@ -131,6 +141,8 @@ protected:
 	********************************************************/
 	void InputDatas(int count)
 	{
+		ClearList();
+
 		ScoreData data;
 		DoubleLinkedList::Iterator end;
 		int dataNum = count;
@@ -178,4 +190,55 @@ protected:
 		tailIter = list.End(); --tailIter;//最後の要素を取得
 		endIter = list.End();
 	}
+
+	/*********************************************************
+	* @brief		リストを空くする
+	********************************************************/
+	void ClearList()
+	{
+		//空の場合終了
+		if (list.Count() == 0)
+		{
+			return;
+		}
+
+		//末尾から全部削除
+		auto iter = list.End();
+		iter--;
+		auto del = iter;
+		while (del !=list.Begin())
+		{
+			iter--;
+			list.Remove(del);
+			del = iter;
+		}
+		list.Remove(del);//先頭を削除
+	}
 };
+
+
+/*********************************************************
+* @brief		要素は期待される値であるかの確認
+* @details		期待される値の配列を渡してリスト内の要素が一致するか判定する
+* @param		datas: 期待される値の配列
+* @param		count: 値の個数
+* @param		list: 比較するリスト
+********************************************************/
+inline bool CheckListValue(const ScoreData* datas, const int count, const DoubleLinkedList& list)
+{
+	auto iter = list.CBegin();
+
+	//期待される値ではない場合falseで終了
+	{
+		for (int i = 0; i < count; i++, iter++)
+		{
+			if (datas[i].name != (*iter).name ||
+				datas[i].score != (*iter).score)
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
